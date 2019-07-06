@@ -14,10 +14,14 @@ import java.net.URL;
 public class MeteoApiService extends AsyncTask<String, String, JSONObject> {
 
     @Override
+    protected void onPostExecute(JSONObject jsonObject) {
+        super.onPostExecute(jsonObject);
+    }
+
     protected JSONObject doInBackground(String[] parameters) {
 
         try {
-            URL url = new URL("https://api.openweathermap.org/data/2.5/forecast?APPID=468576b059a8ebbce9f5aa780cc259fc&lang=fr&q=" + parameters[0] + ",fr");
+            URL url = new URL("https://api.openweathermap.org/data/2.5/forecast?APPID=468576b059a8ebbce9f5aa780cc259fc&lang=fr&units=metric&q=" + parameters[0] + ",fr");
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");

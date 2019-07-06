@@ -65,7 +65,7 @@ public class MyFavouriteRecyclerViewAdapter extends RecyclerView.Adapter<MyFavou
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mCityView.setText(mValues.get(position).city);
+        holder.mCityView.setText(mValues.get(position).cityId);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

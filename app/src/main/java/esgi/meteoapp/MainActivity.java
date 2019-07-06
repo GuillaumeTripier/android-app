@@ -1,8 +1,10 @@
 package esgi.meteoapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -83,6 +85,10 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_favourite) {
             Toast.makeText(this, "Favourite Button", Toast.LENGTH_SHORT).show();
+            Log.i("ACTIVITY_START", "Start Second Activity");
+
+            Intent intent = new Intent(this, FavouriteCityActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_settings) {
             Toast.makeText(this, "Settings Button", Toast.LENGTH_SHORT).show();
 

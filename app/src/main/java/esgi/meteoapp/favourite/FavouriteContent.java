@@ -34,11 +34,11 @@ public class FavouriteContent {
 
     private static void addItem(FavouriteItem item) {
         ITEMS.add(item);
-        ITEM_MAP.put(item.id, item);
+        ITEM_MAP.put(item.cityId, item);
     }
 
     private static FavouriteItem createFavouriteItem(int position) {
-        return new FavouriteItem(String.valueOf(position), "Item " + position, makeDetails(position));
+        return new FavouriteItem("Item " + position, makeDetails(position));
     }
 
     private static String makeDetails(int position) {
@@ -55,28 +55,19 @@ public class FavouriteContent {
      */
     public static class FavouriteItem {
 
-        public String id;
-        public String city;
+        public String cityId;
         public String userId;
 
         public FavouriteItem(){
 
         }
 
-        public String getId() {
-            return id;
+        public String getCityId() {
+            return cityId;
         }
 
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public String getCity() {
-            return city;
-        }
-
-        public void setCity(String city) {
-            this.city = city;
+        public void setCityId(String city) {
+            this.cityId = city;
         }
 
         public String getUserId() {
@@ -87,15 +78,14 @@ public class FavouriteContent {
             this.userId = userId;
         }
 
-        public FavouriteItem(String id, String city, String userId) {
-            this.id = id;
-            this.city = city;
+        public FavouriteItem(String cityId, String userId) {
+            this.cityId = cityId;
             this.userId = userId;
         }
 
         @Override
         public String toString() {
-            return city;
+            return cityId;
         }
     }
 }

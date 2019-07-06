@@ -57,7 +57,7 @@ public class FavouriteFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
             FirebaseFirestore db = FirebaseFirestore.getInstance();
-            Query query = db.collection("favouriteCities").orderBy("id");
+            Query query = db.collection("favouriteCities").orderBy("cityId");
             adapter = new MyFavouriteRecyclerViewAdapter(query, mListener);
             recyclerView.setAdapter(adapter);
         }

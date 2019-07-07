@@ -36,6 +36,7 @@ import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 import esgi.meteoapp.favourite.FavouriteContent;
+import esgi.meteoapp.services.AsyncResponse;
 import esgi.meteoapp.services.MeteoApiService;
 import esgi.meteoapp.weather.WeatherPrediction;
 
@@ -50,10 +51,10 @@ public class MainActivity extends AppCompatActivity
         super.onResume();
         final String val = sharedPreferences.getString(MY_PREF_KEY, "Nothing");
         TextView tVCity = findViewById(R.id.tVCity);
-        TextView tVTemperature = findViewById(R.id.tVTemperature);
-        TextView tVDescription = findViewById(R.id.tVDescription);
-        TextView tVWindSpeed = findViewById(R.id.tVWindSpeed);
-        TextView tVHumidity = findViewById(R.id.tVHumidity);
+        final TextView tVTemperature = findViewById(R.id.tVTemperature);
+        final TextView tVDescription = findViewById(R.id.tVDescription);
+        final TextView tVWindSpeed = findViewById(R.id.tVWindSpeed);
+        final TextView tVHumidity = findViewById(R.id.tVHumidity);
         TextView tVDateMaj = findViewById(R.id.tVDateMaj);
         ImageView iVWindSpeed = findViewById(R.id.iVWindSpeed);
         ImageView iVHumidity = findViewById(R.id.iVHumidity);
@@ -101,28 +102,42 @@ public class MainActivity extends AppCompatActivity
             favouriteIconManager(val);
             tVCity.setText(val);
             String[] params = {val};
-            AsyncTask<String, String, JSONObject> data  = new MeteoApiService().execute(params);
-            try {
-                JSONObject data0 = (JSONObject) data.get().getJSONArray("list").get(0);
-                Log.i("API", data0.toString());
-                WeatherPrediction weatherPrediction = new WeatherPrediction(data0);
-                tVTemperature.setText(weatherPrediction.main.get("temp").toString().split("\\.")[0] + "°C");
-                tVDescription.setText(weatherPrediction.weather.get("description").toString());
-                tVWindSpeed.setText(" " + weatherPrediction.wind.get("speed").toString() + "km/h");
-                tVHumidity.setText(" " + weatherPrediction.main.get("humidity").toString());
 
-                ImageView weatherIcon = findViewById(R.id.weatherIcon);
-                Resources resources = this.getResources();
-                final int resourceId = resources.getIdentifier("ic_" + weatherPrediction.weather.get("icon").toString(), "drawable",
-                        this.getPackageName());
-                weatherIcon.setImageDrawable(resources.getDrawable(resourceId));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            MeteoApiService asyncTask =new MeteoApiService(new AsyncResponse() {
+
+                @Override
+                public void processFinish(JSONObject data) {
+                    Log.i("RRRR", (String) data.toString());
+                    try {
+                        JSONObject data0 = (JSONObject) data.getJSONArray("list").get(0);
+                        Log.i("API", data0.toString());
+                        WeatherPrediction weatherPrediction = new WeatherPrediction(data0);
+                        tVTemperature.setText(weatherPrediction.main.get("temp").toString().split("\\.")[0] + "°C");
+                        tVDescription.setText(weatherPrediction.weather.get("description").toString());
+                        tVWindSpeed.setText(" " + weatherPrediction.wind.get("speed").toString() + "km/h");
+                        tVHumidity.setText(" " + weatherPrediction.main.get("humidity").toString());
+
+                        ImageView weatherIcon = findViewById(R.id.weatherIcon);
+                        Resources resources = mainActivity.getResources();
+                        final int resourceId = resources.getIdentifier("ic_" + weatherPrediction.weather.get("icon").toString(), "drawable",
+                                mainActivity.getPackageName());
+                        weatherIcon.setImageDrawable(resources.getDrawable(resourceId));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+            asyncTask.execute(params);
+
+
+
+
+
+
+
+            //AsyncTask<String, String, JSONObject> data  = new MeteoApiService().execute(params);
+
             Date date = new Date();
             SimpleDateFormat formater = new SimpleDateFormat("dd/MM hh:mm");
             tVDateMaj.setText(formater.format(date) + " MAJ");
@@ -143,6 +158,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         sharedPreferences = getSharedPreferences(MY_PREF, MODE_PRIVATE);
+        sharedPreferences.edit().remove(MY_PREF_KEY).commit();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.search);
         final MainActivity mainActivity = this;

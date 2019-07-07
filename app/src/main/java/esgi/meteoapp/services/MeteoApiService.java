@@ -12,10 +12,15 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class MeteoApiService extends AsyncTask<String, String, JSONObject> {
+    public AsyncResponse delegate = null;//Call back interface
+
+    public MeteoApiService(AsyncResponse asyncResponse) {
+        delegate = asyncResponse;//Assigning call back interfacethrough constructor
+    }
 
     @Override
     protected void onPostExecute(JSONObject jsonObject) {
-        super.onPostExecute(jsonObject);
+        delegate.processFinish(jsonObject);
     }
 
     protected JSONObject doInBackground(String[] parameters) {

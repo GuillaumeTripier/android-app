@@ -107,7 +107,6 @@ public class MainActivity extends AppCompatActivity
 
                 @Override
                 public void processFinish(JSONObject data) {
-                    Log.i("RRRR", (String) data.toString());
                     try {
                         JSONObject data0 = (JSONObject) data.getJSONArray("list").get(0);
                         Log.i("API", data0.toString());
@@ -158,7 +157,6 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         sharedPreferences = getSharedPreferences(MY_PREF, MODE_PRIVATE);
-        sharedPreferences.edit().remove(MY_PREF_KEY).commit();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.search);
         final MainActivity mainActivity = this;

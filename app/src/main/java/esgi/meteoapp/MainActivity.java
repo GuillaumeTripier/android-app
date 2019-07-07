@@ -22,7 +22,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,19 +58,6 @@ public class MainActivity extends AppCompatActivity
         ImageView iVWindSpeed = findViewById(R.id.iVWindSpeed);
         ImageView iVHumidity = findViewById(R.id.iVHumidity);
         final ToggleButton toggleButton = findViewById(R.id.addToFavourite);
-        toggleButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(toggleButton.isChecked()){
-                    FavouriteContent.FavouriteItem favouriteItem = new FavouriteContent.FavouriteItem(val);
-                    FirebaseFirestore db = FirebaseFirestore.getInstance();
-                    db.collection("users").document("weatherapp.esgi@gmail.com").collection("favouriteCities").document(val).set(favouriteItem);
-                }else{
-                    FirebaseFirestore db = FirebaseFirestore.getInstance();
-                    db.collection("users").document("weatherapp.esgi@gmail.com").collection("favouriteCities").document(val).delete();
-                }
-            }
-        });
         if(val.equals("Nothing")){
             tVCity.setText("Choose a City");
             tVDateMaj.setText("??/?? ??:?? MAJ");
@@ -83,6 +74,31 @@ public class MainActivity extends AppCompatActivity
             iVWindSpeed.setVisibility(View.INVISIBLE);
             iVHumidity.setVisibility(View.INVISIBLE);
         }else{
+            final MainActivity mainActivity = this;
+            toggleButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(toggleButton.isChecked()){
+                        FavouriteContent.FavouriteItem favouriteItem = new FavouriteContent.FavouriteItem(val);
+                        FirebaseFirestore db = FirebaseFirestore.getInstance();
+                        db.collection("users").document("weatherapp.esgi@gmail.com").collection("favouriteCities").document(val).set(favouriteItem).addOnSuccessListener(new OnSuccessListener<Object>() {
+                            @Override
+                            public void onSuccess(Object o) {
+                                Toast.makeText(mainActivity, "City added", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }else{
+                        FirebaseFirestore db = FirebaseFirestore.getInstance();
+                        db.collection("users").document("weatherapp.esgi@gmail.com").collection("favouriteCities").document(val).delete().addOnSuccessListener(new OnSuccessListener<Object>() {
+                            @Override
+                            public void onSuccess(Object o) {
+                                Toast.makeText(mainActivity, "City removed", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }
+            });
+            favouriteIconManager(val);
             tVCity.setText(val);
             String[] params = {val};
             AsyncTask<String, String, JSONObject> data  = new MeteoApiService().execute(params);
@@ -90,9 +106,9 @@ public class MainActivity extends AppCompatActivity
                 JSONObject data0 = (JSONObject) data.get().getJSONArray("list").get(0);
                 Log.i("API", data0.toString());
                 WeatherPrediction weatherPrediction = new WeatherPrediction(data0);
-                tVTemperature.setText(weatherPrediction.main.get("temp").toString() + "°C");
+                tVTemperature.setText(weatherPrediction.main.get("temp").toString().split("\\.")[0] + "°C");
                 tVDescription.setText(weatherPrediction.weather.get("description").toString());
-                tVWindSpeed.setText(" " + weatherPrediction.wind.get("speed").toString());
+                tVWindSpeed.setText(" " + weatherPrediction.wind.get("speed").toString() + "km/h");
                 tVHumidity.setText(" " + weatherPrediction.main.get("humidity").toString());
 
                 ImageView weatherIcon = findViewById(R.id.weatherIcon);
@@ -117,8 +133,6 @@ public class MainActivity extends AppCompatActivity
             tVDescription.setVisibility(View.VISIBLE);
             iVWindSpeed.setVisibility(View.VISIBLE);
             iVHumidity.setVisibility(View.VISIBLE);
-            toggleButton.setVisibility(View.VISIBLE);
-            toggleButton.setChecked(true);
         }
     }
 
@@ -129,19 +143,15 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         sharedPreferences = getSharedPreferences(MY_PREF, MODE_PRIVATE);
-        sharedPreferences.edit().remove(MY_PREF_KEY).commit();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.search);
+        final MainActivity mainActivity = this;
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                FavouriteContent.FavouriteItem favouriteItem = new FavouriteContent.FavouriteItem("v523");
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                db.collection("users").document("weatherapp.esgi@gmail.com").collection("favouriteCities").document("v523").set(favouriteItem);
+            public void onClick(View view) {Log.i("ACTIVITY_START", "Start City Activity");
 
-                //db.collection("favouriteCities").document("v521").set(favouriteItem);
-                Snackbar.make(view, "Replace with search City action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(mainActivity, CityActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -194,7 +204,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_favourite) {
-            Log.i("ACTIVITY_START", "Start Second Activity");
+            Log.i("ACTIVITY_START", "Start Favourite Activity");
 
             Intent intent = new Intent(this, FavouriteCityActivity.class);
             startActivity(intent);
@@ -204,6 +214,10 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_about) {
             Toast.makeText(this, "About Button", Toast.LENGTH_SHORT).show();
 
+        } else if (id == R.id.nav_clear) {
+            sharedPreferences.edit().remove(MY_PREF_KEY).commit();
+            Toast.makeText(this, "Data Cleared", Toast.LENGTH_SHORT).show();
+
         } else if (id == R.id.nav_logout) {
             Toast.makeText(this, "Logout Button", Toast.LENGTH_SHORT).show();
 
@@ -212,6 +226,21 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void favouriteIconManager(String val){
+        final ToggleButton toggleButton = findViewById(R.id.addToFavourite);
+
+        toggleButton.setVisibility(View.VISIBLE);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users").document("weatherapp.esgi@gmail.com").collection("favouriteCities").whereEqualTo("cityId", val).get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        final boolean empty = queryDocumentSnapshots.getDocuments().isEmpty();
+                        toggleButton.setChecked(!empty);
+                    }
+                });
     }
 
 

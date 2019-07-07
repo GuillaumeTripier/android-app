@@ -3,6 +3,7 @@
     package="esgi.meteoapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/logo"
@@ -10,7 +11,10 @@
         android:roundIcon="@mipmap/logo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
+        <activity
+            android:name=".CityActivity"
+            android:label="@string/title_activity_city"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".FavouriteCityActivity"
             android:label="@string/title_activity_favourite_city"
@@ -26,4 +30,5 @@
             </intent-filter>
         </activity>
     </application>
+
 </manifest>

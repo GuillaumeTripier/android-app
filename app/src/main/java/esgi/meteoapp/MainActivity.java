@@ -2,8 +2,9 @@ package esgi.meteoapp;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
@@ -16,23 +17,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
 
 import esgi.meteoapp.favourite.FavouriteContent;
+import esgi.meteoapp.services.MeteoApiService;
+import esgi.meteoapp.weather.WeatherPrediction;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -44,9 +45,14 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         final String val = sharedPreferences.getString(MY_PREF_KEY, "Nothing");
-        TextView textViewCity = findViewById(R.id.textViewCity);
-        TextView textViewDateMaj = findViewById(R.id.textViewDateMaj);
-        TextView textViewTemperature = findViewById(R.id.textViewTemperature);
+        TextView tVCity = findViewById(R.id.tVCity);
+        TextView tVTemperature = findViewById(R.id.tVTemperature);
+        TextView tVDescription = findViewById(R.id.tVDescription);
+        TextView tVWindSpeed = findViewById(R.id.tVWindSpeed);
+        TextView tVHumidity = findViewById(R.id.tVHumidity);
+        TextView tVDateMaj = findViewById(R.id.tVDateMaj);
+        ImageView iVWindSpeed = findViewById(R.id.iVWindSpeed);
+        ImageView iVHumidity = findViewById(R.id.iVHumidity);
         final ToggleButton toggleButton = findViewById(R.id.addToFavourite);
         toggleButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,20 +68,55 @@ public class MainActivity extends AppCompatActivity
             }
         });
         if(val.equals("Nothing")){
-            textViewCity.setText("Choose a City");
-            textViewDateMaj.setText("??/?? ??:?? MAJ");
-            textViewDateMaj.setVisibility(View.INVISIBLE);
-            textViewTemperature.setText("-00°C");
-            textViewTemperature.setVisibility(View.INVISIBLE);
+            tVCity.setText("Choose a City");
+            tVDateMaj.setText("??/?? ??:?? MAJ");
+            tVDateMaj.setVisibility(View.INVISIBLE);
+            tVTemperature.setText("-00°C");
+            tVTemperature.setVisibility(View.INVISIBLE);
+            tVWindSpeed.setText(" 000km/h");
+            tVWindSpeed.setVisibility(View.INVISIBLE);
+            tVHumidity.setText("0");
+            tVHumidity.setVisibility(View.INVISIBLE);
+            tVDescription.setText("Nothing");
+            tVDescription.setVisibility(View.INVISIBLE);
             toggleButton.setVisibility(View.INVISIBLE);
+            iVWindSpeed.setVisibility(View.INVISIBLE);
+            iVHumidity.setVisibility(View.INVISIBLE);
         }else{
-            textViewCity.setText(val);
+            tVCity.setText(val);
+            String[] params = {val};
+            AsyncTask<String, String, JSONObject> data  = new MeteoApiService().execute(params);
+            try {
+                JSONObject data0 = (JSONObject) data.get().getJSONArray("list").get(0);
+                Log.i("API", data0.toString());
+                WeatherPrediction weatherPrediction = new WeatherPrediction(data0);
+                tVTemperature.setText(weatherPrediction.main.get("temp").toString() + "°C");
+                tVDescription.setText(weatherPrediction.weather.get("description").toString());
+                tVWindSpeed.setText(" " + weatherPrediction.wind.get("speed").toString());
+                tVHumidity.setText(" " + weatherPrediction.main.get("humidity").toString());
+
+                ImageView weatherIcon = findViewById(R.id.weatherIcon);
+                Resources resources = this.getResources();
+                final int resourceId = resources.getIdentifier("ic_" + weatherPrediction.weather.get("icon").toString(), "drawable",
+                        this.getPackageName());
+                weatherIcon.setImageDrawable(resources.getDrawable(resourceId));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             Date date = new Date();
             SimpleDateFormat formater = new SimpleDateFormat("dd/MM hh:mm");
-            textViewDateMaj.setText(formater.format(date) + " MAJ");
-            textViewDateMaj.setVisibility(View.VISIBLE);
-            textViewTemperature.setText("29°C");
-            textViewTemperature.setVisibility(View.VISIBLE);
+            tVDateMaj.setText(formater.format(date) + " MAJ");
+            tVDateMaj.setVisibility(View.VISIBLE);
+            tVTemperature.setVisibility(View.VISIBLE);
+            tVWindSpeed.setVisibility(View.VISIBLE);
+            tVHumidity.setVisibility(View.VISIBLE);
+            tVDescription.setVisibility(View.VISIBLE);
+            iVWindSpeed.setVisibility(View.VISIBLE);
+            iVHumidity.setVisibility(View.VISIBLE);
             toggleButton.setVisibility(View.VISIBLE);
             toggleButton.setChecked(true);
         }

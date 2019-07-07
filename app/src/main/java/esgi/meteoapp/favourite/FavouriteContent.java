@@ -38,7 +38,7 @@ public class FavouriteContent {
     }
 
     private static FavouriteItem createFavouriteItem(int position) {
-        return new FavouriteItem("Item " + position, makeDetails(position));
+        return new FavouriteItem("Item " + position);
     }
 
     private static String makeDetails(int position) {
@@ -56,7 +56,6 @@ public class FavouriteContent {
     public static class FavouriteItem {
 
         public String cityId;
-        public String userId;
 
         public FavouriteItem(){
 
@@ -70,17 +69,8 @@ public class FavouriteContent {
             this.cityId = city;
         }
 
-        public String getUserId() {
-            return userId;
-        }
-
-        public void setUserId(String userId) {
-            this.userId = userId;
-        }
-
-        public FavouriteItem(String cityId, String userId) {
+        public FavouriteItem(String cityId) {
             this.cityId = cityId;
-            this.userId = userId;
         }
 
         @Override

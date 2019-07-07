@@ -58,12 +58,12 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 if(toggleButton.isChecked()){
-                    FavouriteContent.FavouriteItem favouriteItem = new FavouriteContent.FavouriteItem(val, "1");
+                    FavouriteContent.FavouriteItem favouriteItem = new FavouriteContent.FavouriteItem(val);
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
-                    db.collection("favouriteCities").document(val).set(favouriteItem);
+                    db.collection("users").document("weatherapp.esgi@gmail.com").collection("favouriteCities").document(val).set(favouriteItem);
                 }else{
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
-                    db.collection("favouriteCities").document(val).delete();
+                    db.collection("users").document("weatherapp.esgi@gmail.com").collection("favouriteCities").document(val).delete();
                 }
             }
         });
@@ -135,9 +135,11 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FavouriteContent.FavouriteItem favouriteItem = new FavouriteContent.FavouriteItem("v521", "1");
+                FavouriteContent.FavouriteItem favouriteItem = new FavouriteContent.FavouriteItem("v523");
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
-                db.collection("favouriteCities").document("v521").set(favouriteItem);
+                db.collection("users").document("weatherapp.esgi@gmail.com").collection("favouriteCities").document("v523").set(favouriteItem);
+
+                //db.collection("favouriteCities").document("v521").set(favouriteItem);
                 Snackbar.make(view, "Replace with search City action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }

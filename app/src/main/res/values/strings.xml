@@ -6,6 +6,6 @@
     <string name="nav_header_subtitle">4J AL ESGI</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_favourite_city">FavouriteCityActivity</string>
-    <string name="title_activity_city">CityActivity</string>
+    <string name="title_activity_favourite_city">Select a City</string>
+    <string name="title_activity_city">Select a City</string>
 </resources>

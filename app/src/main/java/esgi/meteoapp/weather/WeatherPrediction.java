@@ -20,5 +20,6 @@ public class WeatherPrediction {
         this.wind = (JSONObject) data.get("wind");
         this.clouds = (JSONObject) data.get("wind");
         this.weather = (JSONObject) ((JSONArray) data.get("weather")).get(0);
+        this.date_txt = ((String) data.get("dt_txt")).split(" ")[1].split(":")[0];
     }
 }

@@ -50,14 +50,14 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         final String val = sharedPreferences.getString(MY_PREF_KEY, "Nothing");
-        TextView tVCity = findViewById(R.id.tVCity);
+        final TextView tVCity = findViewById(R.id.tVCity);
         final TextView tVTemperature = findViewById(R.id.tVTemperature);
         final TextView tVDescription = findViewById(R.id.tVDescription);
         final TextView tVWindSpeed = findViewById(R.id.tVWindSpeed);
         final TextView tVHumidity = findViewById(R.id.tVHumidity);
-        TextView tVDateMaj = findViewById(R.id.tVDateMaj);
-        ImageView iVWindSpeed = findViewById(R.id.iVWindSpeed);
-        ImageView iVHumidity = findViewById(R.id.iVHumidity);
+        final TextView tVDateMaj = findViewById(R.id.tVDateMaj);
+        final ImageView iVWindSpeed = findViewById(R.id.iVWindSpeed);
+        final ImageView iVHumidity = findViewById(R.id.iVHumidity);
         final ToggleButton toggleButton = findViewById(R.id.addToFavourite);
         if(val.equals("Nothing")){
             tVCity.setText("Choose a City");
@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity
                             JSONObject data0 = (JSONObject) data.getJSONArray("list").get(0);
                             Log.i("API", data0.toString());
                             WeatherPrediction weatherPrediction = new WeatherPrediction(data0);
-                            tVTemperature.setText(weatherPrediction.main.get("temp").toString().split("\\.")[0] + "°C");
+                            tVTemperature.setText(weatherPrediction.date_txt + "h " + weatherPrediction.main.get("temp").toString().split("\\.")[0] + "°C");
                             tVDescription.setText(weatherPrediction.weather.get("description").toString());
                             tVWindSpeed.setText(" " + weatherPrediction.wind.get("speed").toString() + "km/h");
                             tVHumidity.setText(" " + weatherPrediction.main.get("humidity").toString());
@@ -122,10 +122,24 @@ public class MainActivity extends AppCompatActivity
                             final int resourceId = resources.getIdentifier("ic_" + weatherPrediction.weather.get("icon").toString(), "drawable",
                                     mainActivity.getPackageName());
                             weatherIcon.setImageDrawable(resources.getDrawable(resourceId));
+
+                            tVDateMaj.setVisibility(View.VISIBLE);
+                            tVTemperature.setVisibility(View.VISIBLE);
+                            tVWindSpeed.setVisibility(View.VISIBLE);
+                            tVHumidity.setVisibility(View.VISIBLE);
+                            iVWindSpeed.setVisibility(View.VISIBLE);
+                            iVHumidity.setVisibility(View.VISIBLE);
                         }else{
                             final int resourceId = resources.getIdentifier("ic_not_connected", "drawable",
                                     mainActivity.getPackageName());
                             weatherIcon.setImageDrawable(resources.getDrawable(resourceId));
+
+                            tVCity.setText("Network error");
+                            tVDateMaj.setVisibility(View.INVISIBLE);
+                            tVTemperature.setVisibility(View.INVISIBLE);
+                            tVDescription.setText("Weather data unreachable");
+                            iVWindSpeed.setVisibility(View.INVISIBLE);
+                            iVHumidity.setVisibility(View.INVISIBLE);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -144,15 +158,18 @@ public class MainActivity extends AppCompatActivity
             //AsyncTask<String, String, JSONObject> data  = new MeteoApiService().execute(params);
 
             Date date = new Date();
-            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM hh:mm");
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM HH:mm");
             tVDateMaj.setText(formatter.format(date) + " MAJ");
-            tVDateMaj.setVisibility(View.VISIBLE);
-            tVTemperature.setVisibility(View.VISIBLE);
-            tVWindSpeed.setVisibility(View.VISIBLE);
-            tVHumidity.setVisibility(View.VISIBLE);
+
+            tVDateMaj.setVisibility(View.INVISIBLE);
+            tVTemperature.setVisibility(View.INVISIBLE);
+            tVWindSpeed.setVisibility(View.INVISIBLE);
+            tVHumidity.setVisibility(View.INVISIBLE);
+            tVDescription.setText("Loading ...");
+            iVWindSpeed.setVisibility(View.INVISIBLE);
+            iVHumidity.setVisibility(View.INVISIBLE);
+
             tVDescription.setVisibility(View.VISIBLE);
-            iVWindSpeed.setVisibility(View.VISIBLE);
-            iVHumidity.setVisibility(View.VISIBLE);
             ImageView weatherIcon = findViewById(R.id.weatherIcon);
             Resources resources = mainActivity.getResources();
             final int resourceId = resources.getIdentifier("ic_waiting", "drawable",
@@ -256,7 +273,7 @@ public class MainActivity extends AppCompatActivity
     private void favouriteIconManager(String val){
         final ToggleButton toggleButton = findViewById(R.id.addToFavourite);
 
-        toggleButton.setVisibility(View.VISIBLE);
+        toggleButton.setVisibility(View.INVISIBLE);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("users").document("weatherapp.esgi@gmail.com").collection("favouriteCities").whereEqualTo("cityId", val).get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -264,6 +281,7 @@ public class MainActivity extends AppCompatActivity
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         final boolean empty = queryDocumentSnapshots.getDocuments().isEmpty();
                         toggleButton.setChecked(!empty);
+                        toggleButton.setVisibility(View.VISIBLE);
                     }
                 });
     }

@@ -44,7 +44,9 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     public static final String MY_PREF = "my_pref";
     public static final String MY_PREF_KEY = "selected_city";
+    public static final String MY_PREF_MAIL = "userMAil";
     private SharedPreferences sharedPreferences;
+    private String email;
 
     @Override
     protected void onResume() {
@@ -82,7 +84,7 @@ public class MainActivity extends AppCompatActivity
                     if(toggleButton.isChecked()){
                         FavouriteContent.FavouriteItem favouriteItem = new FavouriteContent.FavouriteItem(val);
                         FirebaseFirestore db = FirebaseFirestore.getInstance();
-                        db.collection("users").document("weatherapp.esgi@gmail.com").collection("favouriteCities").document(val).set(favouriteItem).addOnSuccessListener(new OnSuccessListener<Object>() {
+                        db.collection("users").document(mainActivity.email).collection("favouriteCities").document(val).set(favouriteItem).addOnSuccessListener(new OnSuccessListener<Object>() {
                             @Override
                             public void onSuccess(Object o) {
                                 Toast.makeText(mainActivity, "City added", Toast.LENGTH_SHORT).show();
@@ -90,7 +92,7 @@ public class MainActivity extends AppCompatActivity
                         });
                     }else{
                         FirebaseFirestore db = FirebaseFirestore.getInstance();
-                        db.collection("users").document("weatherapp.esgi@gmail.com").collection("favouriteCities").document(val).delete().addOnSuccessListener(new OnSuccessListener<Object>() {
+                        db.collection("users").document(mainActivity.email).collection("favouriteCities").document(val).delete().addOnSuccessListener(new OnSuccessListener<Object>() {
                             @Override
                             public void onSuccess(Object o) {
                                 Toast.makeText(mainActivity, "City removed", Toast.LENGTH_SHORT).show();
@@ -205,6 +207,10 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        Log.i("EMAIL-" , getIntent().getStringExtra("userMail"));
+        this.email = getIntent().getStringExtra("userMail");
+
+        sharedPreferences.edit().putString(MY_PREF_MAIL, this.email).apply();
     }
 
     @Override
@@ -275,7 +281,7 @@ public class MainActivity extends AppCompatActivity
 
         toggleButton.setVisibility(View.INVISIBLE);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("users").document("weatherapp.esgi@gmail.com").collection("favouriteCities").whereEqualTo("cityId", val).get()
+        db.collection("users").document(this.email).collection("favouriteCities").whereEqualTo("cityId", val).get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {

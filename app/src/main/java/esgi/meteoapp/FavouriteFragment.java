@@ -1,6 +1,7 @@
 package esgi.meteoapp;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -16,6 +17,9 @@ import com.google.firebase.firestore.Query;
 import esgi.meteoapp.favourite.FavouriteContent;
 import esgi.meteoapp.favourite.FavouriteContent.FavouriteItem;
 
+import static android.content.Context.MODE_PRIVATE;
+import static esgi.meteoapp.MainActivity.MY_PREF;
+
 /**
  * A fragment representing a list of Items.
  * <p/>
@@ -28,6 +32,8 @@ public class FavouriteFragment extends Fragment {
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
     private MyFavouriteRecyclerViewAdapter adapter;
+    public static final String MY_PREF_MAIL = "userMAil";
+    private SharedPreferences sharedPreferences;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -56,8 +62,11 @@ public class FavouriteFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
+
+            sharedPreferences = context.getSharedPreferences(MY_PREF, MODE_PRIVATE);
+            final String val = sharedPreferences.getString(MY_PREF_MAIL, "default@gmail.com");
             FirebaseFirestore db = FirebaseFirestore.getInstance();
-            Query query = db.collection("users").document("weatherapp.esgi@gmail.com").collection("favouriteCities").orderBy("cityId");
+            Query query = db.collection("users").document(val).collection("favouriteCities").orderBy("cityId");
             //Query query = db.collection("favouriteCities").orderBy("cityId");
             adapter = new MyFavouriteRecyclerViewAdapter(query, mListener);
             recyclerView.setAdapter(adapter);

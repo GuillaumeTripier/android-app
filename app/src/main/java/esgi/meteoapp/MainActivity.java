@@ -108,19 +108,25 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void processFinish(JSONObject data) {
                     try {
-                        JSONObject data0 = (JSONObject) data.getJSONArray("list").get(0);
-                        Log.i("API", data0.toString());
-                        WeatherPrediction weatherPrediction = new WeatherPrediction(data0);
-                        tVTemperature.setText(weatherPrediction.main.get("temp").toString().split("\\.")[0] + "°C");
-                        tVDescription.setText(weatherPrediction.weather.get("description").toString());
-                        tVWindSpeed.setText(" " + weatherPrediction.wind.get("speed").toString() + "km/h");
-                        tVHumidity.setText(" " + weatherPrediction.main.get("humidity").toString());
-
                         ImageView weatherIcon = findViewById(R.id.weatherIcon);
                         Resources resources = mainActivity.getResources();
-                        final int resourceId = resources.getIdentifier("ic_" + weatherPrediction.weather.get("icon").toString(), "drawable",
-                                mainActivity.getPackageName());
-                        weatherIcon.setImageDrawable(resources.getDrawable(resourceId));
+                        if(data != null) {
+                            JSONObject data0 = (JSONObject) data.getJSONArray("list").get(0);
+                            Log.i("API", data0.toString());
+                            WeatherPrediction weatherPrediction = new WeatherPrediction(data0);
+                            tVTemperature.setText(weatherPrediction.main.get("temp").toString().split("\\.")[0] + "°C");
+                            tVDescription.setText(weatherPrediction.weather.get("description").toString());
+                            tVWindSpeed.setText(" " + weatherPrediction.wind.get("speed").toString() + "km/h");
+                            tVHumidity.setText(" " + weatherPrediction.main.get("humidity").toString());
+
+                            final int resourceId = resources.getIdentifier("ic_" + weatherPrediction.weather.get("icon").toString(), "drawable",
+                                    mainActivity.getPackageName());
+                            weatherIcon.setImageDrawable(resources.getDrawable(resourceId));
+                        }else{
+                            final int resourceId = resources.getIdentifier("ic_not_connected", "drawable",
+                                    mainActivity.getPackageName());
+                            weatherIcon.setImageDrawable(resources.getDrawable(resourceId));
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -138,8 +144,8 @@ public class MainActivity extends AppCompatActivity
             //AsyncTask<String, String, JSONObject> data  = new MeteoApiService().execute(params);
 
             Date date = new Date();
-            SimpleDateFormat formater = new SimpleDateFormat("dd/MM hh:mm");
-            tVDateMaj.setText(formater.format(date) + " MAJ");
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM hh:mm");
+            tVDateMaj.setText(formatter.format(date) + " MAJ");
             tVDateMaj.setVisibility(View.VISIBLE);
             tVTemperature.setVisibility(View.VISIBLE);
             tVWindSpeed.setVisibility(View.VISIBLE);
@@ -147,6 +153,11 @@ public class MainActivity extends AppCompatActivity
             tVDescription.setVisibility(View.VISIBLE);
             iVWindSpeed.setVisibility(View.VISIBLE);
             iVHumidity.setVisibility(View.VISIBLE);
+            ImageView weatherIcon = findViewById(R.id.weatherIcon);
+            Resources resources = mainActivity.getResources();
+            final int resourceId = resources.getIdentifier("ic_waiting", "drawable",
+                    mainActivity.getPackageName());
+            weatherIcon.setImageDrawable(resources.getDrawable(resourceId));
         }
     }
 
@@ -255,6 +266,10 @@ public class MainActivity extends AppCompatActivity
                         toggleButton.setChecked(!empty);
                     }
                 });
+    }
+
+    public void reloadActivity(View view){
+        onResume();
     }
 
 

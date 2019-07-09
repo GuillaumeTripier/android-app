@@ -28,7 +28,7 @@ public class CityActivity extends AppCompatActivity implements CityFragment.OnLi
     @Override
     public void onListFragmentInteraction(CityContent.CityItem item){
         sharedPreferences.edit().putString(MY_PREF_KEY, item.toString()).apply();
-        this.onBackPressed();
+        finish();
     }
 
 }

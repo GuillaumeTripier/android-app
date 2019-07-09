@@ -38,6 +38,6 @@ public class FavouriteCityActivity extends AppCompatActivity implements Favourit
     @Override
     public void onListFragmentInteraction(FavouriteContent.FavouriteItem item){
         sharedPreferences.edit().putString(MY_PREF_KEY, item.toString()).apply();
-        this.onBackPressed();
+        finish();
     }
 }

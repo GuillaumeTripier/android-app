@@ -7,26 +7,22 @@
     <item
         android:id="@+id/nav_favourite"
         android:icon="@android:drawable/btn_star"
-        android:title="Favourites" />
+        android:title="@string/nav_favourite" />
 
-    <item android:title="Options">
+    <item android:title="@string/nav_options">
         <menu>
             <item
                 android:id="@+id/nav_settings"
                 android:icon="@drawable/gear"
-                android:title="Settings" />
+                android:title="@string/action_settings" />
             <item
                 android:id="@+id/nav_about"
                 android:icon="@android:drawable/ic_dialog_info"
-                android:title="About" />
-            <item
-                android:id="@+id/nav_clear"
-                android:icon="@android:drawable/ic_delete"
-                android:title="Clear cache" />
+                android:title="@string/nav_about" />
             <item
                 android:id="@+id/nav_logout"
                 android:icon="@android:drawable/ic_lock_idle_lock"
-                android:title="Logout" />
+                android:title="@string/nav_logout" />
         </menu>
     </item>
 

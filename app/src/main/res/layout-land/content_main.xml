@@ -24,7 +24,8 @@
                 android:layout_height="match_parent"
                 app:srcCompat="@drawable/ic_logo"
                 tools:layout_editor_absoluteX="16dp"
-                tools:layout_editor_absoluteY="65dp" />
+                tools:layout_editor_absoluteY="65dp"
+                android:contentDescription="@string/weather_logo_description" />
         </LinearLayout>
 
         <android.support.constraint.ConstraintLayout
@@ -60,7 +61,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
-                android:text="City"
+                android:text="@android:string/autofill"
                 android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"
                 android:textSize="24sp"
@@ -78,7 +79,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
-                android:text="-00°C"
+                android:text="@android:string/autofill"
                 android:textAlignment="center"
                 android:textAllCaps="false"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display2"
@@ -113,13 +114,14 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     app:srcCompat="@drawable/ic_wind"
-                    tools:ignore="VectorDrawableCompat" />
+                    tools:ignore="VectorDrawableCompat"
+                    android:contentDescription="@string/wind_logo_description" />
 
                 <TextView
                     android:id="@+id/tVWindSpeed"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=" 000.0km/h"
+                    android:text="@android:string/autofill"
                     android:textAlignment="center"
                     tools:layout_editor_absoluteX="54dp"
                     tools:layout_editor_absoluteY="479dp" />
@@ -133,7 +135,7 @@
                     android:id="@+id/tVHumidity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="100"
+                    android:text="@android:string/autofill"
                     android:textAlignment="center"
                     tools:layout_editor_absoluteX="293dp"
                     tools:layout_editor_absoluteY="555dp" />
@@ -144,7 +146,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     app:srcCompat="@drawable/ic_humidity"
-                    tools:ignore="VectorDrawableCompat" />
+                    tools:ignore="VectorDrawableCompat"
+                    android:contentDescription="@string/humidity_logo_description" />
 
                 <Space
                     android:layout_width="50dp"
@@ -160,7 +163,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:text="partiellement beau"
+                android:text="@android:string/autofill"
                 android:textAlignment="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -173,7 +176,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
-                android:text="06/07 14:51 MAJ"
+                android:text="@android:string/autofill"
                 android:textAlignment="center"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -194,7 +197,9 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0"
-                app:srcCompat="@drawable/ic_reload" />
+                app:srcCompat="@drawable/ic_reload"
+                tools:ignore="VectorDrawableCompat"
+                android:contentDescription="@string/refresh_logo_description" />
         </android.support.constraint.ConstraintLayout>
 
     </LinearLayout>

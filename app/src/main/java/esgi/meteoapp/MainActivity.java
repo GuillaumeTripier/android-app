@@ -61,8 +61,9 @@ public class MainActivity extends AppCompatActivity
         final ImageView iVWindSpeed = findViewById(R.id.iVWindSpeed);
         final ImageView iVHumidity = findViewById(R.id.iVHumidity);
         final ToggleButton toggleButton = findViewById(R.id.addToFavourite);
+        ImageView weatherIcon = findViewById(R.id.weatherIcon);
         if(val.equals("Nothing")){
-            tVCity.setText("Choose a City");
+            tVCity.setText(getString(R.string.choose_a_city));
             tVDateMaj.setText("??/?? ??:?? MAJ");
             tVDateMaj.setVisibility(View.INVISIBLE);
             tVTemperature.setText("-00°C");
@@ -76,6 +77,10 @@ public class MainActivity extends AppCompatActivity
             toggleButton.setVisibility(View.INVISIBLE);
             iVWindSpeed.setVisibility(View.INVISIBLE);
             iVHumidity.setVisibility(View.INVISIBLE);
+            Resources resources = this.getResources();
+            final int resourceId = resources.getIdentifier("logo", "drawable",
+                    this.getPackageName());
+            weatherIcon.setImageDrawable(resources.getDrawable(resourceId));
         }else{
             final MainActivity mainActivity = this;
             toggleButton.setOnClickListener(new View.OnClickListener() {
@@ -87,7 +92,7 @@ public class MainActivity extends AppCompatActivity
                         db.collection("users").document(mainActivity.email).collection("favouriteCities").document(val).set(favouriteItem).addOnSuccessListener(new OnSuccessListener<Object>() {
                             @Override
                             public void onSuccess(Object o) {
-                                Toast.makeText(mainActivity, "City added", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(mainActivity, getString(R.string.city_added), Toast.LENGTH_SHORT).show();
                             }
                         });
                     }else{
@@ -95,13 +100,12 @@ public class MainActivity extends AppCompatActivity
                         db.collection("users").document(mainActivity.email).collection("favouriteCities").document(val).delete().addOnSuccessListener(new OnSuccessListener<Object>() {
                             @Override
                             public void onSuccess(Object o) {
-                                Toast.makeText(mainActivity, "City removed", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(mainActivity, getString(R.string.city_removed), Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
                 }
             });
-            favouriteIconManager(val);
             tVCity.setText(val);
             String[] params = {val};
 
@@ -110,6 +114,7 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void processFinish(JSONObject data) {
                     try {
+                        boolean isConnected;
                         ImageView weatherIcon = findViewById(R.id.weatherIcon);
                         Resources resources = mainActivity.getResources();
                         if(data != null) {
@@ -131,18 +136,22 @@ public class MainActivity extends AppCompatActivity
                             tVHumidity.setVisibility(View.VISIBLE);
                             iVWindSpeed.setVisibility(View.VISIBLE);
                             iVHumidity.setVisibility(View.VISIBLE);
+                            isConnected = true;
                         }else{
                             final int resourceId = resources.getIdentifier("ic_not_connected", "drawable",
                                     mainActivity.getPackageName());
                             weatherIcon.setImageDrawable(resources.getDrawable(resourceId));
 
-                            tVCity.setText("Network error");
+                            tVCity.setText(getString(R.string.network_error));
                             tVDateMaj.setVisibility(View.INVISIBLE);
                             tVTemperature.setVisibility(View.INVISIBLE);
-                            tVDescription.setText("Weather data unreachable");
+                            tVDescription.setText(getString(R.string.weather_data_unreachable));
                             iVWindSpeed.setVisibility(View.INVISIBLE);
                             iVHumidity.setVisibility(View.INVISIBLE);
+                            isConnected = false;
                         }
+
+                        favouriteIconManager(val, isConnected);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -167,12 +176,12 @@ public class MainActivity extends AppCompatActivity
             tVTemperature.setVisibility(View.INVISIBLE);
             tVWindSpeed.setVisibility(View.INVISIBLE);
             tVHumidity.setVisibility(View.INVISIBLE);
-            tVDescription.setText("Loading ...");
+            tVDescription.setText(getString(R.string.loading));
             iVWindSpeed.setVisibility(View.INVISIBLE);
             iVHumidity.setVisibility(View.INVISIBLE);
+            toggleButton.setVisibility(View.INVISIBLE);
 
             tVDescription.setVisibility(View.VISIBLE);
-            ImageView weatherIcon = findViewById(R.id.weatherIcon);
             Resources resources = mainActivity.getResources();
             final int resourceId = resources.getIdentifier("ic_waiting", "drawable",
                     mainActivity.getPackageName());
@@ -238,7 +247,9 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_clear) {
+            sharedPreferences.edit().remove(MY_PREF_KEY).commit();
+            Toast.makeText(this, getString(R.string.data_cleared), Toast.LENGTH_SHORT).show();
             return true;
         }
 
@@ -262,10 +273,6 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_about) {
             Toast.makeText(this, "About Button", Toast.LENGTH_SHORT).show();
 
-        } else if (id == R.id.nav_clear) {
-            sharedPreferences.edit().remove(MY_PREF_KEY).commit();
-            Toast.makeText(this, "Data Cleared", Toast.LENGTH_SHORT).show();
-
         } else if (id == R.id.nav_logout) {
             Toast.makeText(this, "Logout Button", Toast.LENGTH_SHORT).show();
 
@@ -276,20 +283,21 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private void favouriteIconManager(String val){
+    private void favouriteIconManager(String val, boolean isConnected){
         final ToggleButton toggleButton = findViewById(R.id.addToFavourite);
 
-        toggleButton.setVisibility(View.INVISIBLE);
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("users").document(this.email).collection("favouriteCities").whereEqualTo("cityId", val).get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        final boolean empty = queryDocumentSnapshots.getDocuments().isEmpty();
-                        toggleButton.setChecked(!empty);
-                        toggleButton.setVisibility(View.VISIBLE);
-                    }
-                });
+        if(isConnected) {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("users").document(this.email).collection("favouriteCities").whereEqualTo("cityId", val).get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            final boolean empty = queryDocumentSnapshots.getDocuments().isEmpty();
+                            toggleButton.setChecked(!empty);
+                            toggleButton.setVisibility(View.VISIBLE);
+                        }
+                    });
+        }
     }
 
     public void reloadActivity(View view){

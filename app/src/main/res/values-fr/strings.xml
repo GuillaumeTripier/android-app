@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="action_settings">Paramètres</string>
+    <string name="title_activity_favourite_city">Sélectionnez une ville</string>
+    <string name="title_activity_city">Sélectionnez une ville</string>
+    <string name="clear_cache">Vider le cache</string>
+    <string name="nav_favourite">Favoris</string>
+    <string name="nav_options">Options</string>
+    <string name="nav_about">A propos</string>
+    <string name="nav_logout">Déconnexion</string>
+    <string name="weather_logo_description">Icone de la météo</string>
+    <string name="wind_logo_description">Vent</string>
+    <string name="humidity_logo_description">Humidité</string>
+    <string name="refresh_logo_description">Rafraichir</string>
+    <string name="nav_header_desc">En-tête de navigation</string>
+    <string name="navigation_drawer_close">Fermer le tiroir de navigation</string>
+    <string name="navigation_drawer_open">Ouvrir le tiroir de navigation</string>
+    <string name="choose_a_city">Choisissez une ville</string>
+    <string name="data_cleared">Données supprimées</string>
+    <string name="loading">Chargement ...</string>
+    <string name="weather_data_unreachable">Données météo inaccessibles</string>
+    <string name="network_error">Erreur réseau</string>
+    <string name="city_removed">Ville supprimée</string>
+    <string name="city_added">Ville ajoutée</string>
+</resources>

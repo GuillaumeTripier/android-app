@@ -33,24 +33,19 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
             .build();
-        mAuth = FirebaseAuth.getInstance();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-
-        if (currentUser != null) {
+        if (mAuth.getCurrentUser() != null) {
             Intent intent = new Intent(getBaseContext(), MainActivity.class);
-            intent.putExtra("userMail", currentUser.getEmail());
-
             startActivity(intent);
         } else {
+            setContentView(R.layout.activity_login);
             SignInButton signInButton = findViewById(R.id.sign_in_button);
             signInButton.setSize(SignInButton.SIZE_STANDARD);
             signInButton.setOnClickListener(new View.OnClickListener() {
@@ -62,10 +57,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onResume() {
+        super.onResume();
 
-
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            finish();
+        }
     }
 
     private void signIn() {
@@ -98,11 +95,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     Log.d(TAG, "signInWithCredential:success");
-                    FirebaseUser user = mAuth.getCurrentUser();
 
                     Intent intent = new Intent(getBaseContext(), MainActivity.class);
-                    intent.putExtra("userMail", user.getEmail());
-
                     startActivity(intent);
                 } else {
                     Log.w(TAG, "signInWithCredential:failure", task.getException());

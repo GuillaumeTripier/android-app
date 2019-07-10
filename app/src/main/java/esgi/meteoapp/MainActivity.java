@@ -24,6 +24,7 @@ import android.widget.ToggleButton;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -40,11 +41,10 @@ import esgi.meteoapp.services.AsyncResponse;
 import esgi.meteoapp.services.MeteoApiService;
 import esgi.meteoapp.weather.WeatherPrediction;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
     public static final String MY_PREF = "my_pref";
     public static final String MY_PREF_KEY = "selected_city";
-    public static final String MY_PREF_MAIL = "userMAil";
     private SharedPreferences sharedPreferences;
     private String email;
 
@@ -216,10 +216,10 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        Log.i("EMAIL-" , getIntent().getStringExtra("userMail"));
-        this.email = getIntent().getStringExtra("userMail");
 
-        sharedPreferences.edit().putString(MY_PREF_MAIL, this.email).apply();
+        this.email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+
+        Log.i("EMAIL-" , this.email);
     }
 
     @Override
@@ -274,7 +274,8 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(this, "About Button", Toast.LENGTH_SHORT).show();
 
         } else if (id == R.id.nav_logout) {
-            Toast.makeText(this, "Logout Button", Toast.LENGTH_SHORT).show();
+            FirebaseAuth.getInstance().signOut();
+            finish();
 
         }
 
@@ -303,6 +304,4 @@ public class MainActivity extends AppCompatActivity
     public void reloadActivity(View view){
         onResume();
     }
-
-
 }

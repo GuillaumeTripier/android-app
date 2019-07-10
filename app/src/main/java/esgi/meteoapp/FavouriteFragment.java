@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -32,7 +33,6 @@ public class FavouriteFragment extends Fragment {
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
     private MyFavouriteRecyclerViewAdapter adapter;
-    public static final String MY_PREF_MAIL = "userMAil";
     private SharedPreferences sharedPreferences;
 
     /**
@@ -64,7 +64,14 @@ public class FavouriteFragment extends Fragment {
             }
 
             sharedPreferences = context.getSharedPreferences(MY_PREF, MODE_PRIVATE);
-            final String val = sharedPreferences.getString(MY_PREF_MAIL, "default@gmail.com");
+
+            final String val;
+            if (FirebaseAuth.getInstance().getCurrentUser().getEmail() != null) {
+                val = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+            } else {
+                val = "default@gmail.com";
+            }
+
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             Query query = db.collection("users").document(val).collection("favouriteCities").orderBy("cityId");
             //Query query = db.collection("favouriteCities").orderBy("cityId");

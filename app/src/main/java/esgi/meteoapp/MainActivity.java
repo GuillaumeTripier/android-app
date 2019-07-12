@@ -34,12 +34,14 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import esgi.meteoapp.favourite.FavouriteContent;
 import esgi.meteoapp.services.AsyncResponse;
 import esgi.meteoapp.services.MeteoApiService;
 import esgi.meteoapp.weather.WeatherPrediction;
+import esgi.meteoapp.weather.WeatherPredictionContent;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static final String MY_PREF_KEY = "selected_city";
     private SharedPreferences sharedPreferences;
     private String email;
+    private List<WeatherPredictionContent.WeatherPrediction> weatherPredictionList;
 
     @Override
     protected void onResume() {
@@ -129,7 +132,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             final int resourceId = resources.getIdentifier("ic_" + weatherPrediction.weather.get("icon").toString(), "drawable",
                                     mainActivity.getPackageName());
                             weatherIcon.setImageDrawable(resources.getDrawable(resourceId));
-
+                            weatherIcon.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    Intent intent = new Intent(mainActivity, WeatherPredictionActivity.class);
+                                    startActivity(intent);
+                                }
+                            });
                             tVDateMaj.setVisibility(View.VISIBLE);
                             tVTemperature.setVisibility(View.VISIBLE);
                             tVWindSpeed.setVisibility(View.VISIBLE);

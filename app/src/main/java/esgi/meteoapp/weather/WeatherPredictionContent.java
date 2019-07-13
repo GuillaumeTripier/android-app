@@ -29,12 +29,8 @@ public class WeatherPredictionContent {
 
     private static void addItem(WeatherPrediction weatherPrediction) {
         ITEMS.add(weatherPrediction);
-        ITEM_MAP.put(weatherPrediction.date_txt, weatherPrediction);
+        ITEM_MAP.put(weatherPrediction.hour_txt, weatherPrediction);
     }
-
-    /*private static WeatherPrediction createDummyItem(int position) {
-        return new WeatherPrediction(String.valueOf(position), "Item " + position, makeDetails(position));
-    }*/
 
     private static String makeDetails(int position) {
         StringBuilder builder = new StringBuilder();
@@ -49,6 +45,7 @@ public class WeatherPredictionContent {
      * A dummy item representing a piece of content.
      */
     public static class WeatherPrediction {
+        public String hour_txt;
         public String date_txt;
         public JSONObject main;
         public JSONObject weather;
@@ -64,7 +61,8 @@ public class WeatherPredictionContent {
             this.wind = (JSONObject) data.get("wind");
             this.clouds = (JSONObject) data.get("wind");
             this.weather = (JSONObject) ((JSONArray) data.get("weather")).get(0);
-            this.date_txt = ((String) data.get("dt_txt")).split(" ")[1].split(":")[0];
+            this.hour_txt = ((String) data.get("dt_txt")).split(" ")[1].split(":")[0];
+            this.date_txt = ((String) data.get("dt_txt")).split(" ")[0];
         }
 
         public static List<WeatherPrediction> getWeatherPredictionList(JSONArray data) throws JSONException {

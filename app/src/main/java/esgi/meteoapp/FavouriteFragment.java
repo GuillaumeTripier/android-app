@@ -65,11 +65,15 @@ public class FavouriteFragment extends Fragment {
 
             sharedPreferences = context.getSharedPreferences(MY_PREF, MODE_PRIVATE);
 
-            final String val;
-            if (FirebaseAuth.getInstance().getCurrentUser().getEmail() != null) {
-                val = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-            } else {
-                val = "default@gmail.com";
+            String val;
+            try {
+                if (FirebaseAuth.getInstance().getCurrentUser().getEmail() != null) {
+                    val = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+                } else {
+                    val = "weatherapp.esgi@gmail.com";
+                }
+            }catch(Exception e){
+                val = "notAuthenticatedUser";
             }
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();

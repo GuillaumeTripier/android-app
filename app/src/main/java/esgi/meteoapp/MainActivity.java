@@ -3,10 +3,8 @@ package esgi.meteoapp;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -23,30 +21,31 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import esgi.meteoapp.favourite.FavouriteContent;
 import esgi.meteoapp.services.AsyncResponse;
 import esgi.meteoapp.services.MeteoApiService;
-import esgi.meteoapp.weather.WeatherPrediction;
 import esgi.meteoapp.weather.WeatherPredictionContent;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     public static final String MY_PREF = "my_pref";
     public static final String MY_PREF_KEY = "selected_city";
+    public static final String MY_CACHE_TXT = "/my_cache.txt";
     private SharedPreferences sharedPreferences;
     private String email;
     private List<WeatherPredictionContent.WeatherPrediction> weatherPredictionList;
@@ -80,6 +79,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             toggleButton.setVisibility(View.INVISIBLE);
             iVWindSpeed.setVisibility(View.INVISIBLE);
             iVHumidity.setVisibility(View.INVISIBLE);
+            weatherIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                }
+            });
             Resources resources = this.getResources();
             final int resourceId = resources.getIdentifier("logo", "drawable",
                     this.getPackageName());
@@ -123,8 +127,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         if(data != null) {
                             JSONObject data0 = (JSONObject) data.getJSONArray("list").get(0);
                             Log.i("API", data0.toString());
-                            WeatherPrediction weatherPrediction = new WeatherPrediction(data0);
-                            tVTemperature.setText(weatherPrediction.date_txt + "h " + weatherPrediction.main.get("temp").toString().split("\\.")[0] + "°C");
+                            WeatherPredictionContent.WeatherPrediction weatherPrediction = new WeatherPredictionContent.WeatherPrediction(data0);
+                            tVTemperature.setText(weatherPrediction.hour_txt + "h " + weatherPrediction.main.get("temp").toString().split("\\.")[0] + "°C");
                             tVDescription.setText(weatherPrediction.weather.get("description").toString());
                             tVWindSpeed.setText(" " + weatherPrediction.wind.get("speed").toString() + "km/h");
                             tVHumidity.setText(" " + weatherPrediction.main.get("humidity").toString());
@@ -132,6 +136,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             final int resourceId = resources.getIdentifier("ic_" + weatherPrediction.weather.get("icon").toString(), "drawable",
                                     mainActivity.getPackageName());
                             weatherIcon.setImageDrawable(resources.getDrawable(resourceId));
+
+                            File cacheDir = getCacheDir();
+                            String filePath = cacheDir.getPath() + MY_CACHE_TXT;
+                            File cacheFile = new File(filePath);
+                            try {
+                                FileOutputStream fileOutputStream = new FileOutputStream(cacheFile);
+                                //String val = new Date().toString() + "\n";
+                                fileOutputStream.write(val.getBytes());
+                                fileOutputStream.close();
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+
                             weatherIcon.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
@@ -190,6 +210,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             iVHumidity.setVisibility(View.INVISIBLE);
             toggleButton.setVisibility(View.INVISIBLE);
 
+            weatherIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                }
+            });
             tVDescription.setVisibility(View.VISIBLE);
             Resources resources = mainActivity.getResources();
             final int resourceId = resources.getIdentifier("ic_waiting", "drawable",

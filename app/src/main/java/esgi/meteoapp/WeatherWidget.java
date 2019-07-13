@@ -1,12 +1,9 @@
 package esgi.meteoapp;
 
-import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.widget.RemoteViews;
 
@@ -15,7 +12,7 @@ import org.json.JSONObject;
 
 import esgi.meteoapp.services.AsyncResponse;
 import esgi.meteoapp.services.MeteoApiService;
-import esgi.meteoapp.weather.WeatherPrediction;
+import esgi.meteoapp.weather.WeatherPredictionContent;
 
 /**
  * Implementation of App Widget functionality.
@@ -45,8 +42,8 @@ public class WeatherWidget extends AppWidgetProvider {
                     if(data != null) {
                         JSONObject data0 = (JSONObject) data.getJSONArray("list").get(0);
                         Log.i("Widget", data0.toString());
-                        WeatherPrediction weatherPrediction = new WeatherPrediction(data0);
-                        temperature = weatherPrediction.date_txt + "h " + weatherPrediction.main.get("temp").toString().split("\\.")[0] + "°C";
+                        WeatherPredictionContent.WeatherPrediction weatherPrediction = new WeatherPredictionContent.WeatherPrediction(data0);
+                        temperature = weatherPrediction.hour_txt + "h " + weatherPrediction.main.get("temp").toString().split("\\.")[0] + "°C";
                         Resources resources = context.getResources();
                         resourceId = resources.getIdentifier("ic_" + weatherPrediction.weather.get("icon").toString(), "drawable",
                                 context.getPackageName());

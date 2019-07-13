@@ -6,12 +6,23 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Date;
 
 import esgi.meteoapp.services.AsyncResponse;
 import esgi.meteoapp.services.MeteoApiService;
@@ -31,6 +42,7 @@ public class WeatherPredictionFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+    public static final String MY_CACHE_TXT = "/my_cache.txt";
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -89,7 +101,26 @@ public class WeatherPredictionFragment extends Fragment {
                 }
 
             });
-            asyncTask.execute("Paris");
+
+            File cacheDir = getActivity().getCacheDir();
+            String filePath = cacheDir.getPath() + MY_CACHE_TXT;
+            File cacheFile = new File(filePath);
+            StringBuilder sb = new StringBuilder();
+            if(cacheFile.exists()){
+                try {
+                    FileInputStream fileInputStream = new FileInputStream(cacheFile);
+                    BufferedReader br = new BufferedReader(new InputStreamReader(fileInputStream));
+                    String line;
+                    while((line = br.readLine()) != null){
+                        sb.append(line).append("\n");
+                    }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            asyncTask.execute(sb.toString());
         }
         return view;
     }

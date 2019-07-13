@@ -10,4 +10,6 @@
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
     tools:context=".FavouriteFragment"
-    tools:listitem="@layout/fragment_favourite" />
+    tools:listitem="@layout/fragment_favourite" >
+
+</android.support.v7.widget.RecyclerView>

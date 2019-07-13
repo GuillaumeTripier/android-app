@@ -9,6 +9,6 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     tools:context=".WeatherPredictionFragment"
     tools:listitem="@layout/fragment_weather_prediction" />

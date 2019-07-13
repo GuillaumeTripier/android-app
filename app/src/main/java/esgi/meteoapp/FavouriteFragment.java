@@ -29,7 +29,6 @@ import static esgi.meteoapp.MainActivity.MY_PREF;
  */
 public class FavouriteFragment extends Fragment {
 
-    // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
     private MyFavouriteRecyclerViewAdapter adapter;
@@ -126,7 +125,6 @@ public class FavouriteFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onListFragmentInteraction(FavouriteItem item);
     }
 }

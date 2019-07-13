@@ -23,7 +23,6 @@ import esgi.meteoapp.city.CityContent.CityItem;
  */
 public class CityFragment extends Fragment {
 
-    // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
     private MyCityRecyclerViewAdapter adapter;
@@ -105,7 +104,6 @@ public class CityFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onListFragmentInteraction(CityItem item);
     }
 }

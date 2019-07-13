@@ -21,11 +21,6 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link FavouriteItem} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
- */
 public class MyFavouriteRecyclerViewAdapter extends RecyclerView.Adapter<MyFavouriteRecyclerViewAdapter.ViewHolder> implements EventListener<QuerySnapshot> {
 
     private final List<FavouriteItem> mValues;
@@ -86,9 +81,6 @@ public class MyFavouriteRecyclerViewAdapter extends RecyclerView.Adapter<MyFavou
 
     @Override
     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-        if(e != null){
-            // TODO : handle exception
-        }
         for (DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()) {
             switch(dc.getType()){
                 case ADDED:

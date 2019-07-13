@@ -126,7 +126,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         Resources resources = mainActivity.getResources();
                         if(data != null) {
                             JSONObject data0 = (JSONObject) data.getJSONArray("list").get(0);
-                            Log.i("API", data0.toString());
                             WeatherPredictionContent.WeatherPrediction weatherPrediction = new WeatherPredictionContent.WeatherPrediction(data0);
                             tVTemperature.setText(weatherPrediction.hour_txt + "h " + weatherPrediction.main.get("temp").toString().split("\\.")[0] + "°C");
                             tVDescription.setText(weatherPrediction.weather.get("description").toString());
@@ -235,7 +234,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         final MainActivity mainActivity = this;
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {Log.i("ACTIVITY_START", "Start City Activity");
+            public void onClick(View view) {
 
                 Intent intent = new Intent(mainActivity, CityActivity.class);
                 startActivity(intent);
@@ -252,8 +251,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
         this.email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-
-        Log.i("EMAIL-" , this.email);
     }
 
     @Override
@@ -297,8 +294,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.nav_favourite) {
-            Log.i("ACTIVITY_START", "Start Favourite Activity");
-
             Intent intent = new Intent(this, FavouriteCityActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_settings) {

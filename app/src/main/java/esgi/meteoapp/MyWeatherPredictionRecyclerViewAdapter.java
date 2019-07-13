@@ -17,11 +17,6 @@ import esgi.meteoapp.weather.WeatherPredictionContent.WeatherPrediction;
 
 import java.util.List;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link WeatherPrediction} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
- */
 public class MyWeatherPredictionRecyclerViewAdapter extends RecyclerView.Adapter<MyWeatherPredictionRecyclerViewAdapter.ViewHolder> {
 
     public static final int DARK_BACKGROUND = 0xFF888888;

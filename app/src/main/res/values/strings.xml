@@ -24,8 +24,8 @@
     <string name="weather_data_unreachable">Weather data unreachable</string>
     <string name="loading">Loading ...</string>
     <string name="data_cleared">Data Cleared</string>
-    <string name="appwidget_text">EXAMPLE</string>
-    <string name="configure">Configure</string>
-    <string name="add_widget">Add widget</string>
+    <string name="appwidget_text" translatable="false">EXAMPLE</string>
+    <string name="configure" translatable="false">Configure</string>
+    <string name="add_widget" translatable="false">Add widget</string>
     <string name="title_activity_weather_prediction">Weather predictions</string>
 </resources>

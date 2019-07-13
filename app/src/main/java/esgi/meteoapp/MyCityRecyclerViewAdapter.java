@@ -24,7 +24,6 @@ import javax.annotation.Nullable;
 /**
  * {@link RecyclerView.Adapter} that can display a {@link CityItem} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
  */
 public class MyCityRecyclerViewAdapter extends RecyclerView.Adapter<MyCityRecyclerViewAdapter.ViewHolder> implements EventListener<QuerySnapshot> {
 
@@ -86,9 +85,6 @@ public class MyCityRecyclerViewAdapter extends RecyclerView.Adapter<MyCityRecycl
 
     @Override
     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-        if(e != null){
-            // TODO : handle exception
-        }
         for (DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()) {
             switch(dc.getType()){
                 case ADDED:

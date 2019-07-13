@@ -101,8 +101,6 @@ public class WeatherWidgetConfigureActivity extends AppCompatActivity implements
         }
 
         String city = loadPref(WeatherWidgetConfigureActivity.this, mAppWidgetId);
-        //mAppWidgetText.setText(city);
-        // TODO : Load weather info from api for city
     }
 }
 

@@ -29,17 +29,9 @@ import esgi.meteoapp.services.MeteoApiService;
 import esgi.meteoapp.weather.WeatherPredictionContent;
 import esgi.meteoapp.weather.WeatherPredictionContent.WeatherPrediction;
 
-/**
- * A fragment representing a list of Items.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
- * interface.
- */
 public class WeatherPredictionFragment extends Fragment {
 
-    // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
     public static final String MY_CACHE_TXT = "/my_cache.txt";
@@ -51,8 +43,6 @@ public class WeatherPredictionFragment extends Fragment {
     public WeatherPredictionFragment() {
     }
 
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
     public static WeatherPredictionFragment newInstance(int columnCount) {
         WeatherPredictionFragment fragment = new WeatherPredictionFragment();
         Bundle args = new Bundle();
@@ -154,7 +144,6 @@ public class WeatherPredictionFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onListFragmentInteraction(WeatherPrediction item);
     }
 }

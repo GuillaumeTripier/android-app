@@ -41,7 +41,6 @@ public class WeatherWidget extends AppWidgetProvider {
                     int resourceId = R.drawable.ic_not_connected;;
                     if(data != null) {
                         JSONObject data0 = (JSONObject) data.getJSONArray("list").get(0);
-                        Log.i("Widget", data0.toString());
                         WeatherPredictionContent.WeatherPrediction weatherPrediction = new WeatherPredictionContent.WeatherPrediction(data0);
                         temperature = weatherPrediction.hour_txt + "h " + weatherPrediction.main.get("temp").toString().split("\\.")[0] + "°C";
                         Resources resources = context.getResources();

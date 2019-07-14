@@ -13,13 +13,13 @@ import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import esgi.meteoapp.CityFragment.OnListFragmentInteractionListener;
-import esgi.meteoapp.city.CityContent.CityItem;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nullable;
+
+import esgi.meteoapp.CityFragment.OnListFragmentInteractionListener;
+import esgi.meteoapp.city.CityContent.CityItem;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link CityItem} and makes a call to the

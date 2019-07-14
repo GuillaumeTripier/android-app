@@ -1,11 +1,9 @@
 package esgi.meteoapp;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-import esgi.meteoapp.city.CityContent;
 import esgi.meteoapp.weather.WeatherPredictionContent;
 
 public class WeatherPredictionActivity extends AppCompatActivity implements WeatherPredictionFragment.OnListFragmentInteractionListener {

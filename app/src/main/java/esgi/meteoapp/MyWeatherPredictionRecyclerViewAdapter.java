@@ -12,10 +12,10 @@ import android.widget.TextView;
 
 import org.json.JSONException;
 
+import java.util.List;
+
 import esgi.meteoapp.WeatherPredictionFragment.OnListFragmentInteractionListener;
 import esgi.meteoapp.weather.WeatherPredictionContent.WeatherPrediction;
-
-import java.util.List;
 
 public class MyWeatherPredictionRecyclerViewAdapter extends RecyclerView.Adapter<MyWeatherPredictionRecyclerViewAdapter.ViewHolder> {
 

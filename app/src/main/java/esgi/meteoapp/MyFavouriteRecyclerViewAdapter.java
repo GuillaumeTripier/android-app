@@ -13,13 +13,13 @@ import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import esgi.meteoapp.FavouriteFragment.OnListFragmentInteractionListener;
-import esgi.meteoapp.favourite.FavouriteContent.FavouriteItem;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nullable;
+
+import esgi.meteoapp.FavouriteFragment.OnListFragmentInteractionListener;
+import esgi.meteoapp.favourite.FavouriteContent.FavouriteItem;
 
 public class MyFavouriteRecyclerViewAdapter extends RecyclerView.Adapter<MyFavouriteRecyclerViewAdapter.ViewHolder> implements EventListener<QuerySnapshot> {
 

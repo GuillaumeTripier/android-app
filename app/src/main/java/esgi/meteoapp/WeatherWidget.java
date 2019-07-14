@@ -4,7 +4,6 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.res.Resources;
-import android.util.Log;
 import android.widget.RemoteViews;
 
 import org.json.JSONException;

@@ -4,10 +4,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.provider.AlarmClock;
 import android.support.design.widget.FloatingActionButton;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -251,6 +252,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
         this.email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+
+        Intent intent = getIntent();
+        if (AlarmClock.ACTION_SET_ALARM.equals(intent.getAction())) {
+            if (intent.hasExtra(AlarmClock.EXTRA_HOUR)) {
+                // Step 2: get the rest of the intent extras and set an alarm
+                ...
+            }
+
+            // Step 3: report the action through the App Indexing API
+            Thing alarm = new Thing.Builder()
+                    .setName("Alarm for 4:00 PM")
+                    .setDescription("Alarm set for 4:00 PM, with the 'Argon' ringtone"
+                            + " and vibrate turned on.")
+                    .setUrl(APP_URI)
+                    .build();
+
+            NotificationCompat.Action setAlarmAction = new NotificationCompat.Action.Builder(NotificationCompat.Action.TYPE_ADD)
+                    .setObject(alarm)
+                    .setActionStatus(NotificationCompat.Action.STATUS_TYPE_COMPLETED)
+                    .build();
+
+            AppIndex.AppIndexApi.end(mClient, setAlarmAction);
+        }
     }
 
     @Override

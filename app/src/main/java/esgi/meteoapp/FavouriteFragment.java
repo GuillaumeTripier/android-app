@@ -15,7 +15,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
-import esgi.meteoapp.favourite.FavouriteContent;
 import esgi.meteoapp.favourite.FavouriteContent.FavouriteItem;
 
 import static android.content.Context.MODE_PRIVATE;

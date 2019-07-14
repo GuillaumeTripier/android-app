@@ -36,7 +36,13 @@
         <activity
             android:name=".CityActivity"
             android:label="@string/title_activity_city"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.SET_ALARM"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.VOICE"/>
+            </intent-filter>
+        </activity>
         <activity
             android:name=".FavouriteCityActivity"
             android:label="@string/title_activity_favourite_city"
